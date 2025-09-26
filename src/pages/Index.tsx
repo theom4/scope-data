@@ -30,7 +30,7 @@ const Index = () => {
       {/* Metrics Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
-          title="Total Users"
+          title="Total Apeluri"
           value="12,234"
           change={12.5}
           changeLabel="from last month"
@@ -38,7 +38,7 @@ const Index = () => {
           trend="up"
         />
         <MetricCard
-          title="Page Views"
+          title="Apeluri Initiate"
           value="45,678"
           change={8.2}
           changeLabel="from last month"
@@ -46,7 +46,7 @@ const Index = () => {
           trend="up"
         />
         <MetricCard
-          title="Revenue"
+          title="Apeluri Primite"
           value="$23,456"
           change={-2.1}
           changeLabel="from last month"
@@ -54,7 +54,7 @@ const Index = () => {
           trend="down"
         />
         <MetricCard
-          title="Conversion Rate"
+          title="Rata Conversie"
           value="3.24%"
           change={0.8}
           changeLabel="from last month"

@@ -56,7 +56,7 @@ export function RevenueChart() {
   return (
     <Card className="col-span-full lg:col-span-2 border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Revenue Overview</CardTitle>
+        <CardTitle className="text-lg font-semibold">Volum Apeluri</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-80">

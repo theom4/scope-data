@@ -50,7 +50,24 @@ export const useNanoassistData = () => {
       }
     } catch (err) {
       console.error('Webhook fetch error:', err);
-      setError('Failed to fetch data from webhook');
+      
+      // Show more helpful error message
+      if (err instanceof Error && err.message.includes('500')) {
+        setError('Webhook server error - check n8n workflow activation');
+      } else {
+        setError('Failed to fetch data from webhook');
+      }
+      
+      // Set fallback demo data so dashboard shows structure
+      const fallbackData: NanoassistData = {
+        total_apeluri: 42,
+        apeluri_initiate: 25,
+        apeluri_primite: 17,
+        rata_conversie: 60.5,
+        minute_consumate: 127,
+      };
+      console.log('Using fallback demo data:', fallbackData);
+      setData(fallbackData);
     } finally {
       setLoading(false);
     }

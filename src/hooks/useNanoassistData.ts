@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 
 interface NanoassistData {
   total_apeluri: number;
@@ -22,43 +21,36 @@ export const useNanoassistData = () => {
 
   const fetchData = async () => {
     try {
-      console.log('Fetching nanoassist data (first row by created_at)...');
+      console.log('Fetching data from webhook...');
 
-      const { data: rows, error } = await (supabase as any)
-        .from('nanoassist')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(1);
-
-      console.log('Query result rows:', rows);
-      console.log('Query error:', error);
-
-      if (error) {
-        console.error('Error fetching nanoassist data:', error);
-        setError(error.message);
-        return;
+      const response = await fetch('https://n8n.voisero.info/webhook/airclaim-app-get');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const topRow = Array.isArray(rows) ? rows[0] : null;
+      const webhookData = await response.json();
+      console.log('Webhook response:', webhookData);
 
-      if (topRow) {
+      if (Array.isArray(webhookData) && webhookData.length > 0) {
+        const firstRow = webhookData[0];
         const newData: NanoassistData = {
-          total_apeluri: Number(topRow.total_apeluri) || 0,
-          apeluri_initiate: Number(topRow.apeluri_initiate) || 0,
-          apeluri_primite: Number(topRow.apeluri_primite) || 0,
-          rata_conversie: Number(topRow.rata_conversie) || 0,
-          minute_consumate: Number(topRow.minute_consumate) || 0,
+          total_apeluri: Number(firstRow.total_apeluri) || 0,
+          apeluri_initiate: Number(firstRow.apeluri_initiate) || 0,
+          apeluri_primite: Number(firstRow.apeluri_primite) || 0,
+          rata_conversie: Number(firstRow.rata_conversie) || 0,
+          minute_consumate: Number(firstRow.minute_consumate) || 0,
         };
         console.log('Setting new data:', newData);
         setData(newData);
         setError(null);
       } else {
-        console.log('No rows found in nanoassist; keeping defaults');
+        console.log('No data found in webhook response; keeping defaults');
         setError(null);
       }
     } catch (err) {
-      console.error('Unexpected error:', err);
-      setError('Failed to fetch data');
+      console.error('Webhook fetch error:', err);
+      setError('Failed to fetch data from webhook');
     } finally {
       setLoading(false);
     }
@@ -67,30 +59,12 @@ export const useNanoassistData = () => {
   useEffect(() => {
     fetchData();
 
-    // Set up real-time subscription
-    const channel = supabase
-      .channel('nanoassist-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'nanoassist',
-        },
-        () => {
-          console.log('Nanoassist data updated, refetching...');
-          fetchData();
-        }
-      )
-      .subscribe();
-
-    // Backup polling every 30 seconds
+    // Poll every 30 seconds
     const pollInterval = setInterval(() => {
       fetchData();
     }, 30 * 1000);
 
     return () => {
-      supabase.removeChannel(channel);
       clearInterval(pollInterval);
     };
   }, []);

@@ -26,7 +26,7 @@ export const useNanoassistData = () => {
 
       const { data: rows, error } = await (supabase as any)
         .from('nanoassist')
-        .select('total_apeluri, apeluri_initiate, apeluri_primite, rata_conversie, minute_consumate, created_at')
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(1);
 
@@ -84,10 +84,10 @@ export const useNanoassistData = () => {
       )
       .subscribe();
 
-    // Backup polling every 2 minutes
+    // Backup polling every 30 seconds
     const pollInterval = setInterval(() => {
       fetchData();
-    }, 2 * 60 * 1000);
+    }, 30 * 1000);
 
     return () => {
       supabase.removeChannel(channel);

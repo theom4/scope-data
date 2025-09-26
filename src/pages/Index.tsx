@@ -15,8 +15,31 @@ import {
   DeviceChart, 
   UserActivityChart 
 } from "@/components/DashboardChart"
+import { useNanoassistData } from "@/hooks/useNanoassistData"
 
 const Index = () => {
+  const { data, loading, error } = useNanoassistData();
+
+  if (loading) {
+    return (
+      <div className="flex-1 space-y-6 p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg text-muted-foreground">Loading dashboard data...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 space-y-6 p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg text-destructive">Error loading data: {error}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 space-y-6 p-6">
       {/* Header */}
@@ -31,7 +54,7 @@ const Index = () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Total Apeluri"
-          value="12,234"
+          value={data.total_apeluri.toLocaleString()}
           change={12.5}
           changeLabel="from last month"
           icon={Users}
@@ -39,7 +62,7 @@ const Index = () => {
         />
         <MetricCard
           title="Apeluri Initiate"
-          value="45,678"
+          value={data.apeluri_initiate.toLocaleString()}
           change={8.2}
           changeLabel="from last month"
           icon={Eye}
@@ -47,7 +70,7 @@ const Index = () => {
         />
         <MetricCard
           title="Apeluri Primite"
-          value="$23,456"
+          value={data.apeluri_primite.toLocaleString()}
           change={-2.1}
           changeLabel="from last month"
           icon={DollarSign}
@@ -55,7 +78,7 @@ const Index = () => {
         />
         <MetricCard
           title="Rata Conversie"
-          value="3.24%"
+          value={`${data.rata_conversie}%`}
           change={0.8}
           changeLabel="from last month"
           icon={TrendingUp}

@@ -32,20 +32,27 @@ export const useNanoassistData = () => {
       const webhookData = await response.json();
       console.log('Webhook response:', webhookData);
 
+      // Handle both array and single object response
+      let dataRow = null;
       if (Array.isArray(webhookData) && webhookData.length > 0) {
-        const firstRow = webhookData[0];
+        dataRow = webhookData[0];
+      } else if (webhookData && typeof webhookData === 'object') {
+        dataRow = webhookData;
+      }
+
+      if (dataRow) {
         const newData: NanoassistData = {
-          total_apeluri: Number(firstRow.total_apeluri) || 0,
-          apeluri_initiate: Number(firstRow.apeluri_initiate) || 0,
-          apeluri_primite: Number(firstRow.apeluri_primite) || 0,
-          rata_conversie: Number(firstRow.rata_conversie) || 0,
-          minute_consumate: Number(firstRow.minute_consumate) || 0,
+          total_apeluri: Number(dataRow.total_apeluri) || 0,
+          apeluri_initiate: Number(dataRow.apeluri_initiate) || 0,
+          apeluri_primite: Number(dataRow.apeluri_primite) || 0,
+          rata_conversie: Number(dataRow.rata_conversie) || 0,
+          minute_consumate: Number(dataRow.minute_consumate) || 0,
         };
         console.log('Setting new data:', newData);
         setData(newData);
         setError(null);
       } else {
-        console.log('No data found in webhook response; keeping defaults');
+        console.log('No valid data found in webhook response; keeping defaults');
         setError(null);
       }
     } catch (err) {

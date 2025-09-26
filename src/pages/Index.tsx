@@ -16,6 +16,7 @@ import {
   UserActivityChart 
 } from "@/components/DashboardChart"
 import { useNanoassistData } from "@/hooks/useNanoassistData"
+import airclaimLogo from "@/assets/airclaim-logo.png"
 
 const Index = () => {
   const { data, loading, error } = useNanoassistData();
@@ -42,6 +43,15 @@ const Index = () => {
 
   return (
     <div className="flex-1 space-y-6 p-6">
+      {/* Logo */}
+      <div className="flex justify-start">
+        <img 
+          src={airclaimLogo} 
+          alt="AirClaim Logo" 
+          className="h-12 w-auto"
+        />
+      </div>
+      
       {/* Header */}
       <div className="flex flex-col space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>

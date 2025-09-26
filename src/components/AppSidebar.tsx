@@ -4,11 +4,8 @@ import {
   Users, 
   TrendingUp, 
   Settings, 
-  PieChart,
-  Activity,
   FileText,
   Calendar,
-  Bell,
   HelpCircle
 } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
@@ -32,12 +29,6 @@ const mainItems = [
   { title: "Reports", url: "/reports", icon: FileText },
   { title: "Users", url: "/users", icon: Users },
   { title: "Events", url: "/events", icon: Calendar },
-]
-
-const insightsItems = [
-  { title: "Performance", url: "/performance", icon: Activity },
-  { title: "Revenue", url: "/revenue", icon: PieChart },
-  { title: "Notifications", url: "/notifications", icon: Bell },
 ]
 
 const settingsItems = [
@@ -91,32 +82,6 @@ export function AppSidebar() {
                     <NavLink 
                       to={item.url} 
                       end={item.url === "/"}
-                      className={getNavClass(isActive(item.url))}
-                    >
-                      <item.icon className="h-4 w-4 shrink-0" />
-                      {!collapsed && <span className="ml-2">{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* Insights Section */}
-        <SidebarGroup>
-          {!collapsed && (
-            <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground mb-2 mt-6">
-              Insights
-            </SidebarGroupLabel>
-          )}
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {insightsItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink 
-                      to={item.url}
                       className={getNavClass(isActive(item.url))}
                     >
                       <item.icon className="h-4 w-4 shrink-0" />

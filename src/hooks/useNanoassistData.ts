@@ -74,10 +74,10 @@ export const useNanoassistData = () => {
       )
       .subscribe();
 
-    // Backup polling every 5 minutes
+    // Backup polling every 2 minutes
     const pollInterval = setInterval(() => {
       fetchData();
-    }, 5 * 60 * 1000);
+    }, 2 * 60 * 1000);
 
     return () => {
       supabase.removeChannel(channel);

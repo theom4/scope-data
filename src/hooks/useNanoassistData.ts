@@ -22,12 +22,16 @@ export const useNanoassistData = () => {
 
   const fetchData = async () => {
     try {
+      console.log('Fetching nanoassist data...');
       // Using any type to bypass TypeScript strict typing issues
       const { data: result, error } = await (supabase as any)
         .from('nanoassist')
         .select('total_apeluri, apeluri_initiate, apeluri_primite, rata_conversie, minute_consumate')
         .eq('client', 'Airclaim')
         .maybeSingle();
+
+      console.log('Query result:', result);
+      console.log('Query error:', error);
 
       if (error) {
         console.error('Error fetching nanoassist data:', error);
@@ -36,14 +40,18 @@ export const useNanoassistData = () => {
       }
 
       if (result) {
-        setData({
+        const newData = {
           total_apeluri: Number(result.total_apeluri) || 0,
           apeluri_initiate: Number(result.apeluri_initiate) || 0,
           apeluri_primite: Number(result.apeluri_primite) || 0,
           rata_conversie: Number(result.rata_conversie) || 0,
           minute_consumate: Number(result.minute_consumate) || 0,
-        });
+        };
+        console.log('Setting new data:', newData);
+        setData(newData);
         setError(null);
+      } else {
+        console.log('No result found for client Airclaim');
       }
     } catch (err) {
       console.error('Unexpected error:', err);

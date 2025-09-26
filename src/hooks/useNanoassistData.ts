@@ -23,11 +23,19 @@ export const useNanoassistData = () => {
   const fetchData = async () => {
     try {
       console.log('Fetching nanoassist data...');
+      // First get all records to debug
+      const { data: allRecords, error: allError } = await (supabase as any)
+        .from('nanoassist')
+        .select('*');
+      
+      console.log('All nanoassist records:', allRecords);
+      console.log('All records error:', allError);
+      
       // Using any type to bypass TypeScript strict typing issues
       const { data: result, error } = await (supabase as any)
         .from('nanoassist')
         .select('total_apeluri, apeluri_initiate, apeluri_primite, rata_conversie, minute_consumate')
-        .eq('client', 'Airclaim')
+        .ilike('client', 'Airclaim')
         .maybeSingle();
 
       console.log('Query result:', result);

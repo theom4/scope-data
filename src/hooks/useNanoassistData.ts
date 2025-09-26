@@ -22,16 +22,16 @@ export const useNanoassistData = () => {
 
   const fetchData = async () => {
     try {
-      console.log('Fetching nanoassist data for Airclaim client...');
-      
-      // Query the nanoassist table for the Airclaim client
-      const { data: result, error } = await (supabase as any)
-        .from('nanoassist')
-        .select('total_apeluri, apeluri_initiate, apeluri_primite, rata_conversie, minute_consumate')
-        .eq('client', 'Airclaim')
-        .single();
+      console.log('Fetching nanoassist data for Airclaim (latest row)...');
 
-      console.log('Query result:', result);
+      const { data: rows, error } = await (supabase as any)
+        .from('nanoassist')
+        .select('total_apeluri, apeluri_initiate, apeluri_primite, rata_conversie, minute_consumate, created_at')
+        .eq('client', 'Airclaim')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      console.log('Query result rows:', rows);
       console.log('Query error:', error);
 
       if (error) {
@@ -40,19 +40,22 @@ export const useNanoassistData = () => {
         return;
       }
 
-      if (result) {
-        const newData = {
-          total_apeluri: Number(result.total_apeluri) || 0,
-          apeluri_initiate: Number(result.apeluri_initiate) || 0,
-          apeluri_primite: Number(result.apeluri_primite) || 0,
-          rata_conversie: Number(result.rata_conversie) || 0,
-          minute_consumate: Number(result.minute_consumate) || 0,
+      const topRow = Array.isArray(rows) ? rows[0] : null;
+
+      if (topRow) {
+        const newData: NanoassistData = {
+          total_apeluri: Number(topRow.total_apeluri) || 0,
+          apeluri_initiate: Number(topRow.apeluri_initiate) || 0,
+          apeluri_primite: Number(topRow.apeluri_primite) || 0,
+          rata_conversie: Number(topRow.rata_conversie) || 0,
+          minute_consumate: Number(topRow.minute_consumate) || 0,
         };
         console.log('Setting new data:', newData);
         setData(newData);
         setError(null);
       } else {
         console.log('No result found for client Airclaim');
+        setError('No data found for client Airclaim');
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -74,7 +77,7 @@ export const useNanoassistData = () => {
           event: '*',
           schema: 'public',
           table: 'nanoassist',
-          filter: 'client=eq.Airclaim'
+          filter: 'client=eq.Airclaim',
         },
         () => {
           console.log('Nanoassist data updated, refetching...');

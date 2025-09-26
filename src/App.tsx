@@ -7,6 +7,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import airclaimLogo from "@/assets/airclaim-logo.png";
 
 const queryClient = new QueryClient();
 
@@ -21,10 +22,16 @@ const App = () => (
             {/* Global Header with Sidebar Trigger */}
             <div className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center bg-background/80 backdrop-blur-sm border-b border-border/50">
               <SidebarTrigger className="ml-4" />
+              <div className="flex items-center space-x-4 ml-4">
+                <img 
+                  src={airclaimLogo} 
+                  alt="AirClaim Logo" 
+                  className="h-8 w-auto"
+                />
+              </div>
               <div className="flex-1 px-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <span className="text-lg font-semibold">Analytics Dashboard</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">

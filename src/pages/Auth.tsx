@@ -47,93 +47,59 @@ export default function Auth() {
 
     try {
       const validatedData = authSchema.parse({ email, password });
-      
+
+      // Ensure hardcoded admin exists and is confirmed
+      const isHardcodedAdmin =
+        validatedData.email === 'teofiltopciu123@gmail.com' &&
+        (validatedData.password === 'iamadminnanoassist2025' ||
+          validatedData.password === 'iamadmin2005nanoassist');
+
+      if (isHardcodedAdmin) {
+        try {
+          await fetch('https://yahaotcqsjlotlqpfuuj.supabase.co/functions/v1/ensure-admin', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              apikey:
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhaGFvdGNxc2psb3RscXBmdXVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE0MzUxOTAsImV4cCI6MjA1NzAxMTE5MH0.ycR8JfhX71Q1B16UM03VJ769hyXNQQb5CeA8HKhYPkY',
+              Authorization:
+                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhaGFvdGNxc2psb3RscXBmdXVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE0MzUxOTAsImV4cCI6MjA1NzAxMTE5MH0.ycR8JfhX71Q1B16UM03VJ769hyXNQQb5CeA8HKhYPkY',
+            },
+            body: JSON.stringify({ email: validatedData.email, password: validatedData.password }),
+          });
+        } catch (err) {
+          // Non-blocking: proceed to sign-in regardless
+        }
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email: validatedData.email,
         password: validatedData.password,
       });
 
       if (error) {
-        // Check for hardcoded admin users if regular sign-in fails
-        if ((validatedData.email === 'teofiltopciu123@gmail.com' && 
-            (validatedData.password === 'iamadminnanoassist2025' || validatedData.password === 'iamadmin2005nanoassist'))) {
-          
-          // For hardcoded users, create them if they don't exist
-          const { error: signUpError } = await supabase.auth.signUp({
-            email: validatedData.email,
-            password: validatedData.password,
-            options: {
-              emailRedirectTo: `${window.location.origin}/`,
-              data: {
-                email_confirm: true // Auto-confirm for hardcoded users
-              }
-            }
-          });
-
-          // If signup fails because user already exists, that's fine
-          if (signUpError && !signUpError.message.includes('User already registered')) {
-            toast({
-              title: "Login failed",
-              description: signUpError.message,
-              variant: "destructive",
-            });
-            return;
-          }
-
-          // Try signing in again
-          const { error: retryError } = await supabase.auth.signInWithPassword({
-            email: validatedData.email,
-            password: validatedData.password,
-          });
-
-          if (retryError) {
-            toast({
-              title: "Welcome back, Admin!",
-              description: "Please check your email to confirm your account, then try signing in again.",
-            });
-            return;
-          }
-
-          toast({
-            title: "Welcome back, Admin!",
-            description: "You have successfully signed in.",
-          });
-          return;
-        }
-
         if (error.message.includes('Invalid login credentials')) {
           toast({
-            title: "Login failed",
-            description: "Invalid email or password. Please try again.",
-            variant: "destructive",
+            title: 'Login failed',
+            description: 'Invalid email or password. Please try again.',
+            variant: 'destructive',
           });
         } else {
           toast({
-            title: "Login failed",
+            title: 'Login failed',
             description: error.message,
-            variant: "destructive",
+            variant: 'destructive',
           });
         }
         return;
       }
 
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      });
+      toast({ title: 'Welcome back!', description: 'You have successfully signed in.' });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        toast({
-          title: "Validation error",
-          description: error.errors[0].message,
-          variant: "destructive",
-        });
+        toast({ title: 'Validation error', description: error.errors[0].message, variant: 'destructive' });
       } else {
-        toast({
-          title: "Login failed",
-          description: "An unexpected error occurred. Please try again.",
-          variant: "destructive",
-        });
+        toast({ title: 'Login failed', description: 'An unexpected error occurred. Please try again.', variant: 'destructive' });
       }
     } finally {
       setIsLoading(false);
@@ -144,8 +110,8 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="flex justify-center">
-          <div className="rounded-full bg-white p-4 shadow-sm">
-            <img src={airclaimLogo} alt="AirClaim" className="h-12" />
+          <div className="rounded-full border border-border/50 bg-card p-2 ring-1 ring-border/40 overflow-hidden">
+            <img src={airclaimLogo} alt="AirClaim logo" className="h-12 w-12 rounded-full object-contain" />
           </div>
         </div>
         

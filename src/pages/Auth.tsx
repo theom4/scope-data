@@ -48,8 +48,9 @@ export default function Auth() {
     try {
       const validatedData = authSchema.parse({ email, password });
       
-      // Check for hardcoded admin user
-      if (validatedData.email === 'teofiltopciu123@gmail.com' && validatedData.password === 'iamadminnanoassist2025') {
+      // Check for hardcoded admin users
+      if ((validatedData.email === 'teofiltopciu123@gmail.com' && validatedData.password === 'iamadminnanoassist2025') ||
+          (validatedData.email === 'teofiltopciu123@gmail.com' && validatedData.password === 'iamadmin2005nanoassist')) {
         // Create a temporary session for the hardcoded user
         const { error } = await supabase.auth.signUp({
           email: validatedData.email,
@@ -139,7 +140,9 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="flex justify-center">
-          <img src={airclaimLogo} alt="AirClaim" className="h-12" />
+          <div className="rounded-full bg-white p-4 shadow-sm">
+            <img src={airclaimLogo} alt="AirClaim" className="h-12" />
+          </div>
         </div>
         
         <Card>

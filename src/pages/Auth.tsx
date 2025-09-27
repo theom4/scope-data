@@ -48,55 +48,59 @@ export default function Auth() {
     try {
       const validatedData = authSchema.parse({ email, password });
       
-      // Check for hardcoded admin users
-      if ((validatedData.email === 'teofiltopciu123@gmail.com' && validatedData.password === 'iamadminnanoassist2025') ||
-          (validatedData.email === 'teofiltopciu123@gmail.com' && validatedData.password === 'iamadmin2005nanoassist')) {
-        // Create a temporary session for the hardcoded user
-        const { error } = await supabase.auth.signUp({
-          email: validatedData.email,
-          password: validatedData.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`
-          }
-        });
-
-        if (error && !error.message.includes('User already registered')) {
-          toast({
-            title: "Login failed",
-            description: error.message,
-            variant: "destructive",
-          });
-          return;
-        }
-
-        // Try to sign in
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: validatedData.email,
-          password: validatedData.password,
-        });
-
-        if (signInError) {
-          toast({
-            title: "Login failed",
-            description: signInError.message,
-            variant: "destructive",
-          });
-          return;
-        }
-
-        toast({
-          title: "Welcome back, Admin!",
-          description: "You have successfully signed in.",
-        });
-        return;
-      }
-      
       const { error } = await supabase.auth.signInWithPassword({
         email: validatedData.email,
         password: validatedData.password,
       });
 
       if (error) {
+        // Check for hardcoded admin users if regular sign-in fails
+        if ((validatedData.email === 'teofiltopciu123@gmail.com' && 
+            (validatedData.password === 'iamadminnanoassist2025' || validatedData.password === 'iamadmin2005nanoassist'))) {
+          
+          // For hardcoded users, create them if they don't exist
+          const { error: signUpError } = await supabase.auth.signUp({
+            email: validatedData.email,
+            password: validatedData.password,
+            options: {
+              emailRedirectTo: `${window.location.origin}/`,
+              data: {
+                email_confirm: true // Auto-confirm for hardcoded users
+              }
+            }
+          });
+
+          // If signup fails because user already exists, that's fine
+          if (signUpError && !signUpError.message.includes('User already registered')) {
+            toast({
+              title: "Login failed",
+              description: signUpError.message,
+              variant: "destructive",
+            });
+            return;
+          }
+
+          // Try signing in again
+          const { error: retryError } = await supabase.auth.signInWithPassword({
+            email: validatedData.email,
+            password: validatedData.password,
+          });
+
+          if (retryError) {
+            toast({
+              title: "Welcome back, Admin!",
+              description: "Please check your email to confirm your account, then try signing in again.",
+            });
+            return;
+          }
+
+          toast({
+            title: "Welcome back, Admin!",
+            description: "You have successfully signed in.",
+          });
+          return;
+        }
+
         if (error.message.includes('Invalid login credentials')) {
           toast({
             title: "Login failed",

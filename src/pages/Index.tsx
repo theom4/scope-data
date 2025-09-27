@@ -21,6 +21,7 @@ import {
 } from "@/components/DashboardChart"
 import { useNanoassistData } from "@/hooks/useNanoassistData"
 import { Button } from "@/components/ui/button"
+import airclaimLogo from '@/assets/airclaim-logo.png';
 
 const Index = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -92,21 +93,29 @@ const Index = () => {
   }
 
   return (
-    <div className="flex-1 space-y-6 p-6">
-      {/* Header */}
-      <div className="flex flex-col space-y-2">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>
-            <p className="text-muted-foreground">
-              Welcome back, {user.email}
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Header */}
+        <div className="flex flex-col space-y-2">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-4">
+              <img 
+                src={airclaimLogo} 
+                alt="AirClaim Logo" 
+                className="h-10 w-auto"
+              />
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>
+                <p className="text-muted-foreground">
+                  Welcome back, {user.email}
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" onClick={handleSignOut}>
+              Sign Out
+            </Button>
           </div>
-          <Button variant="outline" onClick={handleSignOut}>
-            Sign Out
-          </Button>
         </div>
-      </div>
 
       {/* Metrics Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -219,6 +228,7 @@ const Index = () => {
               </div>
             ))}
           </div>
+        </div>
         </div>
       </div>
     </div>

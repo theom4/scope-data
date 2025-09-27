@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import airclaimLogo from "@/assets/airclaim-logo.png";
 
@@ -49,6 +50,7 @@ const App = () => (
             <main className="flex-1 pt-14 min-h-screen">
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
                 <Route path="/analytics" element={<Index />} />
                 <Route path="/reports" element={<Index />} />
                 <Route path="/users" element={<Index />} />

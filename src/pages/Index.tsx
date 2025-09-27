@@ -1,3 +1,7 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import type { User } from '@supabase/supabase-js';
 import { 
   Users, 
   TrendingUp, 
@@ -16,8 +20,55 @@ import {
   UserActivityChart 
 } from "@/components/DashboardChart"
 import { useNanoassistData } from "@/hooks/useNanoassistData"
+import { Button } from "@/components/ui/button"
 
 const Index = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        setAuthLoading(false);
+        
+        if (!session) {
+          navigate('/auth');
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+      
+      if (!session) {
+        navigate('/auth');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   const { data, loading, error } = useNanoassistData();
 
   if (loading) {
@@ -44,10 +95,17 @@ const Index = () => {
     <div className="flex-1 space-y-6 p-6">
       {/* Header */}
       <div className="flex flex-col space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>
-        <p className="text-muted-foreground">
-          Statistici Apeluri Airclaim
-        </p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>
+            <p className="text-muted-foreground">
+              Welcome back, {user.email}
+            </p>
+          </div>
+          <Button variant="outline" onClick={handleSignOut}>
+            Sign Out
+          </Button>
+        </div>
       </div>
 
       {/* Metrics Grid */}

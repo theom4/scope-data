@@ -62,7 +62,9 @@ export function MetricCard({
             <div className="flex items-center space-x-2 text-sm">
               {change !== undefined && TrendIcon && (
                 <div className={cn("flex items-center space-x-1", getTrendColor())}>
-                  <TrendIcon className="h-3 w-3" />
+                  <div className="rounded-full p-1 bg-current/10">
+                    <TrendIcon className="h-3 w-3" />
+                  </div>
                   <span className="font-medium">
                     {Math.abs(change)}%
                   </span>
@@ -77,7 +79,7 @@ export function MetricCard({
           )}
         </div>
         {Icon && (
-          <div className="rounded-lg bg-primary/10 p-2.5">
+          <div className="rounded-full bg-primary/10 p-3 border border-primary/20">
             <Icon className="h-5 w-5 text-primary" />
           </div>
         )}

@@ -110,9 +110,7 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="flex justify-center">
-          <div className="rounded-full bg-white p-3 shadow-lg">
-            <img src={nanoassistLogo} alt="NanoAssist logo" className="h-12 w-12 object-contain" />
-          </div>
+          <img src={nanoassistLogo} alt="NanoAssist logo" className="h-16 w-auto object-contain" />
         </div>
         
         <Card>

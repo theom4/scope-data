@@ -94,30 +94,27 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <div className="container mx-auto p-6 space-y-6">
-        {/* Header */}
-        <div className="flex flex-col space-y-2">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <img 
-                src={nanoassistLogo} 
-                alt="NanoAssist Logo" 
-                className="h-10 w-auto object-contain mix-blend-multiply"
-                style={{ background: 'transparent' }}
-              />
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>
-                <p className="text-muted-foreground">
-                  Welcome back, {user.email}
-                </p>
-              </div>
-            </div>
-            <Button variant="outline" onClick={handleSignOut}>
-              Sign Out
-            </Button>
+    <div className="flex-1 space-y-6 p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <img 
+            src={nanoassistLogo} 
+            alt="NanoAssist Logo" 
+            className="h-10 w-auto object-contain mix-blend-multiply"
+            style={{ background: 'transparent' }}
+          />
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>
+            <p className="text-muted-foreground">
+              Welcome back, {user.email}
+            </p>
           </div>
         </div>
+        <Button variant="outline" onClick={handleSignOut}>
+          Sign Out
+        </Button>
+      </div>
 
       {/* Metrics Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -230,7 +227,6 @@ const Index = () => {
               </div>
             ))}
           </div>
-        </div>
         </div>
       </div>
     </div>

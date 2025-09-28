@@ -28,6 +28,9 @@ const Index = () => {
   const [authLoading, setAuthLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Call hooks at the top level, before any early returns
+  const { data, loading, error } = useNanoassistData();
+
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -69,8 +72,6 @@ const Index = () => {
   if (!user) {
     return null;
   }
-
-  const { data, loading, error } = useNanoassistData();
 
   if (loading) {
     return (

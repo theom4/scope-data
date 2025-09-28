@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
-import airclaimLogo from '@/assets/airclaim-logo.png';
+import nanoassistLogo from '@/assets/nanoassist-logo.jpg';
 
 const authSchema = z.object({
   email: z.string().trim().email({ message: "Invalid email address" }).max(255, { message: "Email must be less than 255 characters" }),
@@ -110,16 +110,16 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="flex justify-center">
-          <div className="rounded-full border border-border/50 bg-card p-2 ring-1 ring-border/40 overflow-hidden">
-            <img src={airclaimLogo} alt="AirClaim logo" className="h-12 w-12 rounded-full object-contain" />
+          <div className="rounded-full bg-white p-3 shadow-lg">
+            <img src={nanoassistLogo} alt="NanoAssist logo" className="h-12 w-12 object-contain" />
           </div>
         </div>
         
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Welcome</CardTitle>
+            <CardTitle className="text-2xl text-center">Bun venit</CardTitle>
             <CardDescription className="text-center">
-              Sign in to your account
+              Bun venit
             </CardDescription>
           </CardHeader>
           <CardContent>

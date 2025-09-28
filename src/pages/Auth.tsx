@@ -119,7 +119,7 @@ export default function Auth() {
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center">Bun venit</CardTitle>
             <CardDescription className="text-center">
-              Bun venit
+              Conectează-te la contul tău
             </CardDescription>
           </CardHeader>
           <CardContent>

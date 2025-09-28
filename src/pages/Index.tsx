@@ -102,7 +102,8 @@ const Index = () => {
               <img 
                 src={nanoassistLogo} 
                 alt="NanoAssist Logo" 
-                className="h-10 w-auto"
+                className="h-10 w-auto object-contain mix-blend-multiply"
+                style={{ background: 'transparent' }}
               />
               <div>
                 <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>

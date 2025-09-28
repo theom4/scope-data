@@ -21,7 +21,7 @@ import {
 } from "@/components/DashboardChart"
 import { useNanoassistData } from "@/hooks/useNanoassistData"
 import { Button } from "@/components/ui/button"
-import nanoassistLogo from '@/assets/nanoassist-logo-main.png';
+import nanoassistLogo from '@/assets/nanoassist-logo-transparent.png';
 
 const Index = () => {
   const [user, setUser] = useState<User | null>(null);

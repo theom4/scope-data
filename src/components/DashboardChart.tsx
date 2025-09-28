@@ -16,13 +16,13 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const lineData = [
-  { name: 'Jan', value: 4000, revenue: 2400 },
-  { name: 'Feb', value: 3000, revenue: 1398 },
-  { name: 'Mar', value: 2000, revenue: 9800 },
-  { name: 'Apr', value: 2780, revenue: 3908 },
-  { name: 'May', value: 1890, revenue: 4800 },
-  { name: 'Jun', value: 2390, revenue: 3800 },
-  { name: 'Jul', value: 3490, revenue: 4300 },
+  { name: 'Luni', peakHour: 14, avgHour: 11 },
+  { name: 'Marti', peakHour: 16, avgHour: 12 },
+  { name: 'Miercuri', peakHour: 15, avgHour: 10 },
+  { name: 'Joi', peakHour: 17, avgHour: 13 },
+  { name: 'Vineri', peakHour: 18, avgHour: 14 },
+  { name: 'Sambata', peakHour: 12, avgHour: 9 },
+  { name: 'Duminica', peakHour: 11, avgHour: 8 },
 ]
 
 const barData = [
@@ -75,23 +75,26 @@ export function RevenueChart() {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `$${value}`}
+                domain={[0, 24]}
+                tickFormatter={(value) => `${value}:00`}
               />
               <Line 
                 type="monotone" 
-                dataKey="value" 
+                dataKey="peakHour" 
                 stroke="hsl(var(--primary))" 
                 strokeWidth={3}
                 dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
                 activeDot={{ r: 6, stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
+                name="Ora de vârf"
               />
               <Line 
                 type="monotone" 
-                dataKey="revenue" 
+                dataKey="avgHour" 
                 stroke="hsl(var(--primary-glow))" 
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 dot={false}
+                name="Ora medie"
               />
             </LineChart>
           </ResponsiveContainer>

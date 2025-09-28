@@ -1,4 +1,4 @@
-import { Bot, Phone, Settings, Users, BarChart3 } from "lucide-react"
+import { Bot, Settings, BarChart3 } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 
 import {
@@ -16,9 +16,7 @@ import {
 const items = [
   { title: "Dashboard", url: "/", icon: BarChart3 },
   { title: "Automations", url: "/automations", icon: Bot },
-  { title: "Call Recordings", url: "/call-recordings", icon: Phone },
   { title: "Settings", url: "/settings", icon: Settings },
-  { title: "CRM", url: "/crm", icon: Users },
 ]
 
 export function AppSidebar() {

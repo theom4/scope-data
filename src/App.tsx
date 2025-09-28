@@ -8,9 +8,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Automations from "./pages/Automations";
-import CallRecordings from "./pages/CallRecordings";
 import Settings from "./pages/Settings";
-import CRM from "./pages/CRM";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,9 +33,7 @@ const App = () => (
                     <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/automations" element={<Automations />} />
-                      <Route path="/call-recordings" element={<CallRecordings />} />
                       <Route path="/settings" element={<Settings />} />
-                      <Route path="/crm" element={<CRM />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>

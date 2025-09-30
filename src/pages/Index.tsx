@@ -162,15 +162,7 @@ const Index = () => {
         {/* Quick Stats Cards */}
         <div className="space-y-4">
           <MetricCard
-            title="Bounce Rate"
-            value="24.5%"
-            change={-1.2}
-            changeLabel="vs last week"
-            icon={MousePointer}
-            trend="up"
-          />
-          <MetricCard
-            title="Session Duration"
+            title="durata medie apel"
             value="4:32"
             change={15.3}
             changeLabel="vs last week"

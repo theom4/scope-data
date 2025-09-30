@@ -108,7 +108,7 @@ export function VisitorChart() {
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Daily Visitors</CardTitle>
+        <CardTitle className="text-lg font-semibold">Minute apeluri</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-64">
@@ -127,6 +127,7 @@ export function VisitorChart() {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
+                domain={[0, 1000]}
               />
               <Bar 
                 dataKey="visits" 
@@ -146,7 +147,7 @@ export function DeviceChart() {
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Device Usage</CardTitle>
+        <CardTitle className="text-lg font-semibold">Subiect Apeluri</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-64">

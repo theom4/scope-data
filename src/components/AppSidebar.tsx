@@ -1,4 +1,4 @@
-import { Bot, Phone, Settings, Users, BarChart3, MessageCircle, Megaphone } from "lucide-react"
+import { Bot, Phone, Settings, Users, BarChart3, MessageCircle, Megaphone, MessagesSquare } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 
 import {
@@ -20,6 +20,7 @@ const items = [
   { title: "CRM", url: "#", icon: Users },
   { title: "Campaigns", url: "/campaigns", icon: Megaphone },
   { title: "Whatsapp", url: "/whatsapp", icon: MessageCircle },
+  { title: "AI Chat", url: "/chat", icon: MessagesSquare },
   { title: "Settings", url: "/settings", icon: Settings },
 ]
 

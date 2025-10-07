@@ -11,6 +11,7 @@ import Automations from "./pages/Automations";
 import Settings from "./pages/Settings";
 import Whatsapp from "./pages/Whatsapp";
 import Campaigns from "./pages/Campaigns";
+import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
                       <Route path="/automations" element={<Automations />} />
                       <Route path="/campaigns" element={<Campaigns />} />
                       <Route path="/whatsapp" element={<Whatsapp />} />
+                      <Route path="/chat" element={<Chat />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>

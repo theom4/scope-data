@@ -1,12 +1,15 @@
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Lock } from "lucide-react";
 
 const campaigns = [
-  { title: "Confirmare comenzi" },
-  { title: "upsell-uri personalizate" },
-  { title: "sunat feedback" },
-  { title: "Recuperare cosuri abandonate" },
-  { title: "Sunat follow-up" },
+  { title: "Confirmare comenzi", description: "Contacteaza echipa Nanoassist pentru deblocare" },
+  { title: "upsell-uri personalizate", description: "Contacteaza echipa Nanoassist pentru deblocare" },
+  { title: "sunat feedback", description: "Contacteaza echipa Nanoassist pentru deblocare" },
+  { title: "Recuperare cosuri abandonate", description: "Contacteaza echipa Nanoassist pentru deblocare" },
+  { title: "Sunat follow-up", description: "Contacteaza echipa Nanoassist pentru deblocare" },
+  { title: "Depasire competitie", description: "Sistem ce monitorizeaza si te ajuta sa intreci competitia", badge: "In curand" },
+  { title: "Social Media", description: "Creste engagement-ul lead-urilor pe Social Media" },
 ];
 
 const Campaigns = () => {
@@ -23,9 +26,14 @@ const Campaigns = () => {
         {campaigns.map((campaign) => (
           <Card key={campaign.title} className="p-6 flex flex-col items-center justify-center space-y-4 text-center">
             <Lock className="w-12 h-12 text-muted-foreground" />
-            <h3 className="font-semibold text-lg">{campaign.title}</h3>
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg">{campaign.title}</h3>
+              {campaign.badge && (
+                <Badge variant="secondary">{campaign.badge}</Badge>
+              )}
+            </div>
             <p className="text-sm text-muted-foreground">
-              Contacteaza echipa Nanoassist pentru deblocare
+              {campaign.description}
             </p>
           </Card>
         ))}

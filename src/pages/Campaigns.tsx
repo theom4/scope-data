@@ -5,6 +5,8 @@ const campaigns = [
   { title: "Confirmare comenzi" },
   { title: "upsell-uri personalizate" },
   { title: "sunat feedback" },
+  { title: "Recuperare cosuri abandonate" },
+  { title: "Sunat follow-up" },
 ];
 
 const Campaigns = () => {

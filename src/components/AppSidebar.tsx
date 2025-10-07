@@ -1,4 +1,4 @@
-import { Bot, Phone, Settings, Users, BarChart3 } from "lucide-react"
+import { Bot, Phone, Settings, Users, BarChart3, MessageCircle } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 
 import {
@@ -18,6 +18,7 @@ const items = [
   { title: "Automations", url: "/automations", icon: Bot },
   { title: "Call Recordings", url: "#", icon: Phone },
   { title: "CRM", url: "#", icon: Users },
+  { title: "Whatsapp", url: "/whatsapp", icon: MessageCircle },
   { title: "Settings", url: "/settings", icon: Settings },
 ]
 

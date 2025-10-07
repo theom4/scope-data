@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Automations from "./pages/Automations";
 import Settings from "./pages/Settings";
+import Whatsapp from "./pages/Whatsapp";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
                     <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/automations" element={<Automations />} />
+                      <Route path="/whatsapp" element={<Whatsapp />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>

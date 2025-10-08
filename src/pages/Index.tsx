@@ -7,8 +7,8 @@ import {
   TrendingUp, 
   DollarSign, 
   Activity,
-  Eye,
-  MousePointer,
+  PhoneOutgoing,
+  PhoneIncoming,
   Calendar,
   BarChart3
 } from "lucide-react"
@@ -131,7 +131,7 @@ const Index = () => {
           value={data.apeluri_initiate.toLocaleString()}
           change={8.2}
           changeLabel="from last month"
-          icon={Eye}
+          icon={PhoneOutgoing}
           trend="up"
         />
         <MetricCard
@@ -139,7 +139,7 @@ const Index = () => {
           value={data.apeluri_primite.toLocaleString()}
           change={-2.1}
           changeLabel="from last month"
-          icon={DollarSign}
+          icon={PhoneIncoming}
           trend="down"
         />
         <MetricCard

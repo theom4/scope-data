@@ -172,6 +172,7 @@ const Whatsapp = () => {
       setQrCode(null);
       
       try {
+        // Always (re)connect to force a fresh QR
         const connectResponse = await fetch(`https://www.wasenderapi.com/api/whatsapp-sessions/${session.id}/connect`, {
           method: "POST",
           headers: {
@@ -179,18 +180,23 @@ const Whatsapp = () => {
           },
         });
 
-        const connectResult = await connectResponse.json();
+        let connectResult: any = null;
+        try {
+          connectResult = await connectResponse.json();
+        } catch {}
 
-        if (!connectResponse.ok || !connectResult.success) {
-          throw new Error("Failed to connect session");
+        const connectSucceeded = connectResponse.ok && connectResult?.success;
+
+        if (connectSucceeded && connectResult?.data?.qrCode) {
+          setQrCode(connectResult.data.qrCode);
+          toast({
+            title: "Success!",
+            description: "Please scan the QR code with WhatsApp",
+          });
+          return;
         }
 
-        toast({
-          title: "Session connected",
-          description: "Fetching QR code...",
-        });
-
-        // Get QR code
+        // Fallback: fetch QR code even if connect didn't return it
         const qrResponse = await fetch(`https://www.wasenderapi.com/api/whatsapp-sessions/${session.id}/qrcode`, {
           headers: {
             "Authorization": `Bearer ${API_TOKEN}`,
@@ -199,8 +205,9 @@ const Whatsapp = () => {
 
         const qrResult = await qrResponse.json();
 
-        if (!qrResponse.ok || !qrResult.success) {
-          throw new Error("Failed to fetch QR code");
+        if (!qrResponse.ok || !qrResult?.success || !qrResult?.data?.qrCode) {
+          const msg = connectSucceeded ? "Failed to fetch QR code" : (connectResult?.message || "Failed to connect session");
+          throw new Error(msg);
         }
 
         setQrCode(qrResult.data.qrCode);
@@ -456,7 +463,7 @@ const Whatsapp = () => {
           <Card className="p-8 flex flex-col items-center justify-center space-y-6">
             <div className="w-64 h-64 bg-background rounded-lg flex items-center justify-center border-2 border-border overflow-hidden">
               <img 
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(qrCode)}`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(qrCode)}&cb=${Date.now()}`}
                 alt="WhatsApp QR Code"
                 className="w-full h-full"
               />

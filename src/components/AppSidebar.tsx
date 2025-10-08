@@ -45,31 +45,32 @@ export function AppSidebar() {
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  {item.url === "#" ? (
-                    <SidebarMenuButton className="cursor-not-allowed opacity-50">
-                      <item.icon className="h-4 w-4" />
-                      {!collapsed && <span className="ml-2">{item.title}</span>}
-                    </SidebarMenuButton>
-                  ) : (
-                    <SidebarMenuButton asChild>
-                      <NavLink 
-                        to={item.url} 
-                        end
-                        className={({ isActive }) => 
-                          isActive 
-                            ? "relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-primary before:rounded-r !bg-white text-primary font-medium" 
-                            : "!bg-transparent hover:bg-muted/50"
-                        }
-                      >
+              {items.map((item) => {
+                const active = isActive(item.url)
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    {item.url === "#" ? (
+                      <SidebarMenuButton className="cursor-not-allowed opacity-50">
                         <item.icon className="h-4 w-4" />
                         {!collapsed && <span className="ml-2">{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  )}
-                </SidebarMenuItem>
-              ))}
+                      </SidebarMenuButton>
+                    ) : (
+                      <SidebarMenuButton
+                        asChild
+                        isActive={active}
+                        className={active
+                          ? "relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-primary before:rounded-r bg-white text-primary font-medium"
+                          : "bg-transparent hover:bg-muted/50"}
+                      >
+                        <NavLink to={item.url} end className="flex items-center">
+                          <item.icon className="h-4 w-4" />
+                          {!collapsed && <span className="ml-2">{item.title}</span>}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    )}
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

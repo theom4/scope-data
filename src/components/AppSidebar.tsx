@@ -1,4 +1,4 @@
-import { Bot, Phone, Settings, Users, BarChart3, MessageCircle, Megaphone, MessagesSquare } from "lucide-react"
+import { Bot, Phone, Settings, Users, LayoutDashboard, MessageCircle, Megaphone, MessagesSquare } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 
 import {
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar"
 
 const items = [
-  { title: "Dashboard", url: "/", icon: BarChart3 },
+  { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Automations", url: "/automations", icon: Bot },
   { title: "Call Recordings", url: "#", icon: Phone },
   { title: "CRM", url: "#", icon: Users },

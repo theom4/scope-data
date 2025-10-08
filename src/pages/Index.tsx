@@ -171,56 +171,6 @@ const Index = () => {
           />
         </div>
       </div>
-
-      {/* Recent Activity */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-lg border border-border/50 bg-card/50 p-6 backdrop-blur-sm">
-          <h3 className="mb-4 font-semibold">Recent Events</h3>
-          <div className="space-y-3">
-            {[
-              { event: "New user registration", time: "2 minutes ago", type: "success" },
-              { event: "Payment processed", time: "5 minutes ago", type: "success" },
-              { event: "Page view milestone reached", time: "1 hour ago", type: "info" },
-              { event: "Server maintenance completed", time: "2 hours ago", type: "info" }
-            ].map((item, index) => (
-              <div key={index} className="flex items-center justify-between py-2">
-                <div className="flex items-center space-x-3">
-                  <div className={`h-2 w-2 rounded-full ${
-                    item.type === 'success' ? 'bg-success' : 'bg-primary'
-                  }`} />
-                  <span className="text-sm">{item.event}</span>
-                </div>
-                <span className="text-xs text-muted-foreground">{item.time}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-border/50 bg-card/50 p-6 backdrop-blur-sm">
-          <h3 className="mb-4 font-semibold">Top Pages</h3>
-          <div className="space-y-3">
-            {[
-              { page: "/dashboard", views: "2,341", percentage: 32 },
-              { page: "/analytics", views: "1,892", percentage: 26 },
-              { page: "/reports", views: "1,234", percentage: 17 },
-              { page: "/settings", views: "987", percentage: 13 }
-            ].map((item, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{item.page}</span>
-                  <span className="text-sm text-muted-foreground">{item.views} views</span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-muted">
-                  <div 
-                    className="h-1.5 rounded-full bg-primary transition-all duration-500" 
-                    style={{ width: `${item.percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

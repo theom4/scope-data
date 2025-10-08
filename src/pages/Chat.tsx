@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { Send } from "lucide-react";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  timestamp: Date;
 }
 
 const Chat = () => {
@@ -23,7 +25,7 @@ const Chat = () => {
     if (!input.trim() || isLoading) return;
     
     const userMessage = input;
-    setMessages([...messages, { role: "user", content: userMessage }]);
+    setMessages([...messages, { role: "user", content: userMessage, timestamp: new Date() }]);
     setInput("");
     setIsLoading(true);
     
@@ -41,13 +43,15 @@ const Chat = () => {
       
       setMessages(prev => [...prev, { 
         role: "assistant", 
-        content: aiResponse 
+        content: aiResponse,
+        timestamp: new Date()
       }]);
     } catch (error) {
       console.error("Error sending message:", error);
       setMessages(prev => [...prev, { 
         role: "assistant", 
-        content: "Eroare la comunicarea cu AI-ul. Te rog încearcă din nou." 
+        content: "Eroare la comunicarea cu AI-ul. Te rog încearcă din nou.",
+        timestamp: new Date()
       }]);
     } finally {
       setIsLoading(false);
@@ -75,10 +79,10 @@ const Chat = () => {
             messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex flex-col ${message.role === "user" ? "items-end" : "items-start"}`}
               >
                 <div
-                  className={`max-w-[70%] rounded-lg p-4 ${
+                  className={`max-w-[70%] rounded-lg px-3 py-2 ${
                     message.role === "user"
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted"
@@ -86,14 +90,20 @@ const Chat = () => {
                 >
                   {message.content}
                 </div>
+                <span className="text-xs text-muted-foreground mt-1">
+                  {format(message.timestamp, "HH:mm")}
+                </span>
               </div>
             ))
           )}
           {isLoading && (
-            <div className="flex justify-start">
-              <div className="max-w-[70%] rounded-lg p-4 bg-muted">
+            <div className="flex flex-col items-start">
+              <div className="max-w-[70%] rounded-lg px-3 py-2 bg-muted">
                 Se scrie...
               </div>
+              <span className="text-xs text-muted-foreground mt-1">
+                {format(new Date(), "HH:mm")}
+              </span>
             </div>
           )}
           <div ref={messagesEndRef} />

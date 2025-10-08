@@ -256,7 +256,7 @@ const Whatsapp = () => {
                 <p className="text-lg font-medium">{new Date(session.created_at).toLocaleString()}</p>
               </div>
               
-              {session.status === 'disconnected' && (
+              {session.status !== 'connected' && (
                 <Button onClick={handleConnect} disabled={isLoading} className="w-full">
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Connect Session

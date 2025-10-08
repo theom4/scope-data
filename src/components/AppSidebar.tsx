@@ -32,7 +32,9 @@ export function AppSidebar() {
 
   const isActive = (path: string) => currentPath === path
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50"
+    isActive 
+      ? "border-l-4 border-primary bg-primary/5 text-primary font-medium" 
+      : "border-l-4 border-transparent hover:bg-muted/50"
 
   return (
     <Sidebar

@@ -13,19 +13,36 @@ const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
     
-    setMessages([...messages, { role: "user", content: input }]);
+    const userMessage = input;
+    setMessages([...messages, { role: "user", content: userMessage }]);
     setInput("");
     
-    // Simulate AI response (you'll replace this with actual AI integration)
-    setTimeout(() => {
+    try {
+      const response = await fetch("https://n8n.voisero.info/webhook/suplimente-ai-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: userMessage }),
+      });
+
+      const data = await response.json();
+      const aiResponse = data.text || data.message || "No response from AI";
+      
       setMessages(prev => [...prev, { 
         role: "assistant", 
-        content: "Aceasta este o versiune demo. Integrarea cu AI va fi adăugată în curând." 
+        content: aiResponse 
       }]);
-    }, 1000);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: "Eroare la comunicarea cu AI-ul. Te rog încearcă din nou." 
+      }]);
+    }
   };
 
   return (

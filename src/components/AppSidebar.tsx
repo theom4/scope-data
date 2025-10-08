@@ -1,4 +1,4 @@
-import { Bot, Phone, Settings, Users, LayoutDashboard, MessageCircle, Megaphone, MessagesSquare } from "lucide-react"
+import { Zap, Phone, Settings, Users, LayoutDashboard, MessageCircle, Megaphone, MessagesSquare } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 
 import {
@@ -15,7 +15,7 @@ import {
 
 const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Automations", url: "/automations", icon: Bot },
+  { title: "Automations", url: "/automations", icon: Zap },
   { title: "Call Recordings", url: "#", icon: Phone },
   { title: "CRM", url: "#", icon: Users },
   { title: "Campaigns", url: "/campaigns", icon: Megaphone },
@@ -33,8 +33,8 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
-      ? "border-l-4 border-primary bg-primary/5 text-primary font-medium" 
-      : "border-l-4 border-transparent hover:bg-muted/50"
+      ? "relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-white before:rounded-r bg-primary/5 text-primary font-medium" 
+      : "hover:bg-muted/50"
 
   return (
     <Sidebar
@@ -42,7 +42,7 @@ export function AppSidebar() {
     >
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

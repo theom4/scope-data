@@ -1,28 +1,298 @@
 import { Card } from "@/components/ui/card";
-import { QrCode } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import { Loader2, QrCode } from "lucide-react";
+
+const formSchema = z.object({
+  name: z.string().min(1, "Session name is required"),
+  phone_number: z.string().min(1, "Phone number is required"),
+  account_protection: z.boolean().default(true),
+  log_messages: z.boolean().default(true),
+  read_incoming_messages: z.boolean().default(false),
+  auto_reject_calls: z.boolean().default(false),
+  always_online: z.boolean().default(true),
+  webhook_enabled: z.boolean().default(false),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
+const API_TOKEN = "1307|TCwsLrRI8BEQn1EZYt8iNTuSLFC92Cyheh2UDgAE9aedc9a1";
 
 const Whatsapp = () => {
-  return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">WhatsApp Connection</h1>
-        <p className="text-muted-foreground">
-          Scan the QR code below to connect your WhatsApp number to the agent
-        </p>
-      </div>
+  const [isLoading, setIsLoading] = useState(false);
+  const [qrCode, setQrCode] = useState<string | null>(null);
 
-      <Card className="p-8 flex flex-col items-center justify-center space-y-6 max-w-md mx-auto">
-        <div className="w-64 h-64 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-border">
-          <QrCode className="w-32 h-32 text-muted-foreground" />
-        </div>
-        
-        <div className="text-center space-y-2">
-          <h3 className="font-semibold text-lg">Scan with WhatsApp</h3>
-          <p className="text-sm text-muted-foreground">
-            Open WhatsApp on your phone, go to Settings → Linked Devices → Link a Device
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      account_protection: true,
+      log_messages: true,
+      read_incoming_messages: false,
+      auto_reject_calls: false,
+      always_online: true,
+      webhook_enabled: false,
+    },
+  });
+
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
+    setQrCode(null);
+
+    try {
+      // Create session
+      const createResponse = await fetch("https://www.wasenderapi.com/api/whatsapp-sessions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: data.name,
+          phone_number: data.phone_number,
+          account_protection: data.account_protection,
+          log_messages: data.log_messages,
+          read_incoming_messages: data.read_incoming_messages,
+          webhook_enabled: data.webhook_enabled,
+          webhook_events: ["messages.received", "session.status", "messages.update"],
+        }),
+      });
+
+      const createResult = await createResponse.json();
+
+      if (!createResponse.ok || !createResult.success) {
+        throw new Error(createResult.message || "Failed to create session");
+      }
+
+      toast({
+        title: "Session created successfully",
+        description: "Fetching QR code...",
+      });
+
+      // Get QR code
+      const sessionId = createResult.data.id;
+      const qrResponse = await fetch(`https://www.wasenderapi.com/api/whatsapp-sessions/${sessionId}/qrcode`, {
+        headers: {
+          "Authorization": `Bearer ${API_TOKEN}`,
+        },
+      });
+
+      const qrResult = await qrResponse.json();
+
+      if (!qrResponse.ok || !qrResult.success) {
+        throw new Error("Failed to fetch QR code");
+      }
+
+      setQrCode(qrResult.data.qrCode);
+      toast({
+        title: "Success!",
+        description: "Please scan the QR code with WhatsApp",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create session",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="container mx-auto p-6 max-w-2xl">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Create WhatsApp Session</h1>
+          <p className="text-muted-foreground">
+            Set up a new WhatsApp session. You will need to scan a QR code to connect after creating.
           </p>
         </div>
-      </Card>
+
+        <Card className="p-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Session Name */}
+            <div className="space-y-2">
+              <Label htmlFor="name">
+                Session Name <span className="text-destructive">*</span>
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                (used to identify different WhatsApp sessions)
+              </p>
+              <Input
+                id="name"
+                placeholder="My WhatsApp Session"
+                {...register("name")}
+                disabled={isLoading}
+              />
+              {errors.name && (
+                <p className="text-sm text-destructive">{errors.name.message}</p>
+              )}
+            </div>
+
+            {/* Phone Number */}
+            <div className="space-y-2">
+              <Label htmlFor="phone_number">
+                Phone Number <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="phone_number"
+                placeholder="Enter the WhatsApp number you want to connect"
+                {...register("phone_number")}
+                disabled={isLoading}
+              />
+              {errors.phone_number && (
+                <p className="text-sm text-destructive">{errors.phone_number.message}</p>
+              )}
+            </div>
+
+            {/* Account Protection */}
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="account_protection"
+                checked={watch("account_protection")}
+                onCheckedChange={(checked) => setValue("account_protection", checked as boolean)}
+                disabled={isLoading}
+              />
+              <div className="space-y-1">
+                <Label htmlFor="account_protection" className="cursor-pointer">
+                  Enable Account Protection
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Helps prevent WhatsApp from restricting your account by controlling message sending frequency.
+                </p>
+              </div>
+            </div>
+
+            {/* Message Logging */}
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="log_messages"
+                checked={watch("log_messages")}
+                onCheckedChange={(checked) => setValue("log_messages", checked as boolean)}
+                disabled={isLoading}
+              />
+              <div className="space-y-1">
+                <Label htmlFor="log_messages" className="cursor-pointer">
+                  Enable Message Logging
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  When disabled, only delivery statuses are recorded. When enabled, full message content and recipient details are stored.
+                </p>
+              </div>
+            </div>
+
+            {/* Read Incoming Messages */}
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="read_incoming_messages"
+                checked={watch("read_incoming_messages")}
+                onCheckedChange={(checked) => setValue("read_incoming_messages", checked as boolean)}
+                disabled={isLoading}
+              />
+              <div className="space-y-1">
+                <Label htmlFor="read_incoming_messages" className="cursor-pointer">
+                  Read Incoming Messages
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  When enabled, messages will be marked as read automatically when received. This lets senders know you've seen their messages.
+                </p>
+              </div>
+            </div>
+
+            {/* Auto Reject Calls */}
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="auto_reject_calls"
+                checked={watch("auto_reject_calls")}
+                onCheckedChange={(checked) => setValue("auto_reject_calls", checked as boolean)}
+                disabled={isLoading}
+              />
+              <div className="space-y-1">
+                <Label htmlFor="auto_reject_calls" className="cursor-pointer">
+                  Auto Reject Calls
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  When enabled, incoming calls will be automatically rejected.
+                </p>
+              </div>
+            </div>
+
+            {/* Always Online */}
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="always_online"
+                checked={watch("always_online")}
+                onCheckedChange={(checked) => setValue("always_online", checked as boolean)}
+                disabled={isLoading}
+              />
+              <div className="space-y-1">
+                <Label htmlFor="always_online" className="cursor-pointer">
+                  Always Online
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  When enabled, your session will always appear online to your contacts, even when you're not actively using WhatsApp. This can be useful for business accounts to let customers know you're available.
+                </p>
+              </div>
+            </div>
+
+            {/* Webhook Notifications */}
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="webhook_enabled"
+                checked={watch("webhook_enabled")}
+                onCheckedChange={(checked) => setValue("webhook_enabled", checked as boolean)}
+                disabled={isLoading}
+              />
+              <div className="space-y-1">
+                <Label htmlFor="webhook_enabled" className="cursor-pointer">
+                  Enable Webhook Notifications (Optional)
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  When enabled, events will be sent to the webhook URL above.
+                </p>
+              </div>
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create & Connect Session
+            </Button>
+          </form>
+        </Card>
+
+        {/* QR Code Display */}
+        {qrCode && (
+          <Card className="p-8 flex flex-col items-center justify-center space-y-6">
+            <div className="w-64 h-64 bg-background rounded-lg flex items-center justify-center border-2 border-border overflow-hidden">
+              <img 
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(qrCode)}`}
+                alt="WhatsApp QR Code"
+                className="w-full h-full"
+              />
+            </div>
+            
+            <div className="text-center space-y-2">
+              <h3 className="font-semibold text-lg">Scan with WhatsApp</h3>
+              <p className="text-sm text-muted-foreground">
+                Open WhatsApp on your phone, go to Settings → Linked Devices → Link a Device
+              </p>
+            </div>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };

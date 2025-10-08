@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Loader2, QrCode } from "lucide-react";
 
@@ -28,6 +28,8 @@ const API_TOKEN = "1307|TCwsLrRI8BEQn1EZYt8iNTuSLFC92Cyheh2UDgAE9aedc9a1";
 const Whatsapp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [qrCode, setQrCode] = useState<string | null>(null);
+  const [existingSessions, setExistingSessions] = useState<any[]>([]);
+  const [checkingSession, setCheckingSession] = useState(true);
 
   const {
     register,
@@ -46,6 +48,30 @@ const Whatsapp = () => {
       webhook_enabled: false,
     },
   });
+
+  useEffect(() => {
+    const checkExistingSessions = async () => {
+      try {
+        const response = await fetch("https://www.wasenderapi.com/api/whatsapp-sessions", {
+          headers: {
+            "Authorization": `Bearer ${API_TOKEN}`,
+          },
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success && result.data.length > 0) {
+          setExistingSessions(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching sessions:", error);
+      } finally {
+        setCheckingSession(false);
+      }
+    };
+
+    checkExistingSessions();
+  }, []);
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
@@ -110,6 +136,51 @@ const Whatsapp = () => {
       setIsLoading(false);
     }
   };
+
+  if (checkingSession) {
+    return (
+      <div className="container mx-auto p-6 max-w-2xl flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (existingSessions.length > 0) {
+    const session = existingSessions[0];
+    return (
+      <div className="container mx-auto p-6 max-w-2xl">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight">WhatsApp Session</h1>
+            <p className="text-muted-foreground">
+              Your active WhatsApp session
+            </p>
+          </div>
+
+          <Card className="p-6">
+            <div className="space-y-4">
+              <div>
+                <Label>Session Name</Label>
+                <p className="text-lg font-medium">{session.name}</p>
+              </div>
+              <div>
+                <Label>Phone Number</Label>
+                <p className="text-lg font-medium">{session.phone_number}</p>
+              </div>
+              <div>
+                <Label>Status</Label>
+                <p className="text-lg font-medium capitalize">{session.status}</p>
+              </div>
+              <div>
+                <Label>Created At</Label>
+                <p className="text-lg font-medium">{new Date(session.created_at).toLocaleString()}</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 max-w-2xl">

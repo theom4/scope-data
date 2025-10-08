@@ -104,11 +104,30 @@ const Whatsapp = () => {
 
       toast({
         title: "Session created successfully",
+        description: "Connecting session...",
+      });
+
+      // Connect the session first
+      const sessionId = createResult.data.id;
+      const connectResponse = await fetch(`https://www.wasenderapi.com/api/whatsapp-sessions/${sessionId}/connect`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${API_TOKEN}`,
+        },
+      });
+
+      const connectResult = await connectResponse.json();
+
+      if (!connectResponse.ok || !connectResult.success) {
+        throw new Error("Failed to connect session");
+      }
+
+      toast({
+        title: "Session connected",
         description: "Fetching QR code...",
       });
 
       // Get QR code
-      const sessionId = createResult.data.id;
       const qrResponse = await fetch(`https://www.wasenderapi.com/api/whatsapp-sessions/${sessionId}/qrcode`, {
         headers: {
           "Authorization": `Bearer ${API_TOKEN}`,

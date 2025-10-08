@@ -60,7 +60,7 @@ export function AppSidebar() {
                         className={({ isActive }) => 
                           isActive 
                             ? "relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-primary before:rounded-r !bg-white text-primary font-medium" 
-                            : "hover:bg-muted/50"
+                            : "!bg-transparent hover:bg-muted/50"
                         }
                       >
                         <item.icon className="h-4 w-4" />

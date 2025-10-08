@@ -12,13 +12,15 @@ interface Message {
 const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
     
     const userMessage = input;
     setMessages([...messages, { role: "user", content: userMessage }]);
     setInput("");
+    setIsLoading(true);
     
     try {
       const response = await fetch("https://n8n.voisero.info/webhook/suplimente-ai-chat", {
@@ -30,7 +32,7 @@ const Chat = () => {
       });
 
       const data = await response.json();
-      const aiResponse = data.text || data.message || "No response from AI";
+      const aiResponse = data.output || "No response from AI";
       
       setMessages(prev => [...prev, { 
         role: "assistant", 
@@ -42,6 +44,8 @@ const Chat = () => {
         role: "assistant", 
         content: "Eroare la comunicarea cu AI-ul. Te rog încearcă din nou." 
       }]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -80,6 +84,13 @@ const Chat = () => {
               </div>
             ))
           )}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="max-w-[70%] rounded-lg p-4 bg-muted">
+                Se scrie...
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="border-t p-4">
@@ -91,7 +102,7 @@ const Chat = () => {
               placeholder="Scrie mesajul tau aici..."
               className="flex-1"
             />
-            <Button onClick={handleSend}>
+            <Button onClick={handleSend} disabled={isLoading}>
               <Send className="h-4 w-4" />
             </Button>
           </div>

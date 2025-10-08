@@ -166,6 +166,59 @@ const Whatsapp = () => {
 
   if (existingSessions.length > 0) {
     const session = existingSessions[0];
+    
+    const handleConnect = async () => {
+      setIsLoading(true);
+      setQrCode(null);
+      
+      try {
+        const connectResponse = await fetch(`https://www.wasenderapi.com/api/whatsapp-sessions/${session.id}/connect`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${API_TOKEN}`,
+          },
+        });
+
+        const connectResult = await connectResponse.json();
+
+        if (!connectResponse.ok || !connectResult.success) {
+          throw new Error("Failed to connect session");
+        }
+
+        toast({
+          title: "Session connected",
+          description: "Fetching QR code...",
+        });
+
+        // Get QR code
+        const qrResponse = await fetch(`https://www.wasenderapi.com/api/whatsapp-sessions/${session.id}/qrcode`, {
+          headers: {
+            "Authorization": `Bearer ${API_TOKEN}`,
+          },
+        });
+
+        const qrResult = await qrResponse.json();
+
+        if (!qrResponse.ok || !qrResult.success) {
+          throw new Error("Failed to fetch QR code");
+        }
+
+        setQrCode(qrResult.data.qrCode);
+        toast({
+          title: "Success!",
+          description: "Please scan the QR code with WhatsApp",
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: error instanceof Error ? error.message : "Failed to connect session",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
     return (
       <div className="container mx-auto p-6 max-w-2xl">
         <div className="space-y-6">
@@ -188,14 +241,49 @@ const Whatsapp = () => {
               </div>
               <div>
                 <Label>Status</Label>
-                <p className="text-lg font-medium capitalize">{session.status}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    session.status === 'connected' 
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                  }`}>
+                    {session.status}
+                  </span>
+                </div>
               </div>
               <div>
                 <Label>Created At</Label>
                 <p className="text-lg font-medium">{new Date(session.created_at).toLocaleString()}</p>
               </div>
+              
+              {session.status === 'disconnected' && (
+                <Button onClick={handleConnect} disabled={isLoading} className="w-full">
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Connect Session
+                </Button>
+              )}
             </div>
           </Card>
+          
+          {/* QR Code Display */}
+          {qrCode && (
+            <Card className="p-8 flex flex-col items-center justify-center space-y-6">
+              <div className="w-64 h-64 bg-background rounded-lg flex items-center justify-center border-2 border-border overflow-hidden">
+                <img 
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(qrCode)}`}
+                  alt="WhatsApp QR Code"
+                  className="w-full h-full"
+                />
+              </div>
+              
+              <div className="text-center space-y-2">
+                <h3 className="font-semibold text-lg">Scan with WhatsApp</h3>
+                <p className="text-sm text-muted-foreground">
+                  Open WhatsApp on your phone, go to Settings → Linked Devices → Link a Device
+                </p>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
     );

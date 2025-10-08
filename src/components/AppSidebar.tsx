@@ -47,23 +47,27 @@ export function AppSidebar() {
             <SidebarMenu className="gap-1">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    {item.url === "#" ? (
-                      <div className="flex items-center cursor-not-allowed opacity-50">
-                        <item.icon className="h-4 w-4" />
-                        {!collapsed && <span className="ml-2">{item.title}</span>}
-                      </div>
-                    ) : (
+                  {item.url === "#" ? (
+                    <SidebarMenuButton className="cursor-not-allowed opacity-50">
+                      <item.icon className="h-4 w-4" />
+                      {!collapsed && <span className="ml-2">{item.title}</span>}
+                    </SidebarMenuButton>
+                  ) : (
+                    <SidebarMenuButton asChild>
                       <NavLink 
                         to={item.url} 
                         end
-                        className={({ isActive }) => getNavCls({ isActive })}
+                        className={({ isActive }) => 
+                          isActive 
+                            ? "relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-primary before:rounded-r !bg-white text-primary font-medium" 
+                            : "hover:bg-muted/50"
+                        }
                       >
                         <item.icon className="h-4 w-4" />
                         {!collapsed && <span className="ml-2">{item.title}</span>}
                       </NavLink>
-                    )}
-                  </SidebarMenuButton>
+                    </SidebarMenuButton>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

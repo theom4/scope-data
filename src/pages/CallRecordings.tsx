@@ -5,7 +5,7 @@ const CallRecordings = () => {
   const recording = {
     id: 1,
     date: "11 Octombrie 2025",
-    duration: "5:31",
+    duration: "0:54",
     url: "https://storage-gw-de-01.voximplant.com/voxdata-de-rec/2025/10/11/NjBmMzZmNWI3N2UzMDM5MDUxYThlNDhlOWVjZDM3ODAvaHR0cDovL3d3dy1mci0wNi0yMTIudm94aW1wbGFudC5jb206ODA4MC9yZWNvcmRzLzIwMjUvMTAvMTEvQjVDODc0OTQzMEU1RjdENC4xNzYwMTg0NDU3LjUzMTE2Mi5tcDM-.mp3?record_id=1795472760"
   };
 

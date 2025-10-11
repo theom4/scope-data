@@ -16,7 +16,7 @@ import {
 const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Automations", url: "/automations", icon: Zap },
-  { title: "Call Recordings", url: "#", icon: Phone },
+  { title: "Call Recordings", url: "/call-recordings", icon: Phone },
   { title: "CRM", url: "#", icon: Users },
   { title: "Campaigns", url: "/campaigns", icon: Megaphone },
   { title: "Whatsapp", url: "/whatsapp", icon: MessageCircle },

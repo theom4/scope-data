@@ -105,9 +105,9 @@ const Index = () => {
             style={{ background: 'transparent' }}
           />
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Airclaim</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Statistici Apeluri Specialist Suplimente Denis</h1>
             <p className="text-muted-foreground">
-              Welcome back, {user.email}
+              Welcome back, Denis
             </p>
           </div>
         </div>

@@ -52,9 +52,11 @@ export default function Auth() {
 
       // Ensure hardcoded admin exists and is confirmed
       const isHardcodedAdmin =
-        validatedData.email === 'teofiltopciu123@gmail.com' &&
+        (validatedData.email === 'teofiltopciu123@gmail.com' &&
         (validatedData.password === 'iamadminnanoassist2025' ||
-          validatedData.password === 'iamadmin2005nanoassist');
+          validatedData.password === 'iamadmin2005nanoassist')) ||
+        (validatedData.email === 'suplimenteoriginale@gmail.com' &&
+          validatedData.password === 'xWzvdne223');
 
       if (isHardcodedAdmin) {
         try {

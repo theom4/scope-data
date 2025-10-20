@@ -13,7 +13,6 @@ import Whatsapp from "./pages/Whatsapp";
 import Campaigns from "./pages/Campaigns";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
-import CallRecordings from "./pages/CallRecordings";
 
 const queryClient = new QueryClient();
 
@@ -34,16 +33,15 @@ const App = () => (
                     <SidebarTrigger className="ml-2" />
                   </header>
                   <main className="flex-1 bg-background">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/automations" element={<Automations />} />
-                    <Route path="/call-recordings" element={<CallRecordings />} />
-                    <Route path="/campaigns" element={<Campaigns />} />
-                    <Route path="/whatsapp" element={<Whatsapp />} />
-                    <Route path="/chat" element={<Chat />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/automations" element={<Automations />} />
+                      <Route path="/campaigns" element={<Campaigns />} />
+                      <Route path="/whatsapp" element={<Whatsapp />} />
+                      <Route path="/chat" element={<Chat />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
                   </main>
                 </div>
               </div>

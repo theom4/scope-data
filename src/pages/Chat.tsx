@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import { format } from "date-fns";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,54 +7,25 @@ import { Send } from "lucide-react";
 interface Message {
   role: "user" | "assistant";
   content: string;
-  timestamp: Date;
 }
 
 const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = () => {
+    if (!input.trim()) return;
     
-    const userMessage = input;
-    setMessages([...messages, { role: "user", content: userMessage, timestamp: new Date() }]);
+    setMessages([...messages, { role: "user", content: input }]);
     setInput("");
-    setIsLoading(true);
     
-    try {
-      const response = await fetch("https://n8n.voisero.info/webhook/suplimente-ai-chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: userMessage }),
-      });
-
-      const data = await response.json();
-      const aiResponse = data.output || "No response from AI";
-      
+    // Simulate AI response (you'll replace this with actual AI integration)
+    setTimeout(() => {
       setMessages(prev => [...prev, { 
         role: "assistant", 
-        content: aiResponse,
-        timestamp: new Date()
+        content: "Aceasta este o versiune demo. Integrarea cu AI va fi adăugată în curând." 
       }]);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: "Eroare la comunicarea cu AI-ul. Te rog încearcă din nou.",
-        timestamp: new Date()
-      }]);
-    } finally {
-      setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (
@@ -79,10 +49,10 @@ const Chat = () => {
             messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex flex-col ${message.role === "user" ? "items-end" : "items-start"}`}
+                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[70%] rounded-lg px-3 py-2 ${
+                  className={`max-w-[70%] rounded-lg p-4 ${
                     message.role === "user"
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted"
@@ -90,23 +60,9 @@ const Chat = () => {
                 >
                   {message.content}
                 </div>
-                <span className="text-xs text-muted-foreground mt-1">
-                  {format(message.timestamp, "HH:mm")}
-                </span>
               </div>
             ))
           )}
-          {isLoading && (
-            <div className="flex flex-col items-start">
-              <div className="max-w-[70%] rounded-lg px-3 py-2 bg-muted">
-                Se scrie...
-              </div>
-              <span className="text-xs text-muted-foreground mt-1">
-                {format(new Date(), "HH:mm")}
-              </span>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
         </div>
 
         <div className="border-t p-4">
@@ -118,7 +74,7 @@ const Chat = () => {
               placeholder="Scrie mesajul tau aici..."
               className="flex-1"
             />
-            <Button onClick={handleSend} disabled={isLoading}>
+            <Button onClick={handleSend}>
               <Send className="h-4 w-4" />
             </Button>
           </div>

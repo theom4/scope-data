@@ -1,4 +1,4 @@
-import { Zap, Phone, Settings, Users, LayoutDashboard, MessageCircle, Megaphone, MessagesSquare } from "lucide-react"
+import { Bot, Phone, Settings, Users, BarChart3, MessageCircle, Megaphone, MessagesSquare } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 
 import {
@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/sidebar"
 
 const items = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Automations", url: "/automations", icon: Zap },
-  { title: "Call Recordings", url: "/call-recordings", icon: Phone },
+  { title: "Dashboard", url: "/", icon: BarChart3 },
+  { title: "Automations", url: "/automations", icon: Bot },
+  { title: "Call Recordings", url: "#", icon: Phone },
   { title: "CRM", url: "#", icon: Users },
   { title: "Campaigns", url: "/campaigns", icon: Megaphone },
   { title: "Whatsapp", url: "/whatsapp", icon: MessageCircle },
@@ -32,9 +32,7 @@ export function AppSidebar() {
 
   const isActive = (path: string) => currentPath === path
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive 
-      ? "relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-primary before:rounded-r bg-white text-primary font-medium" 
-      : "hover:bg-muted/50"
+    isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50"
 
   return (
     <Sidebar
@@ -42,35 +40,30 @@ export function AppSidebar() {
     >
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1">
-              {items.map((item) => {
-                const active = isActive(item.url)
-                return (
-                  <SidebarMenuItem key={item.title}>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
                     {item.url === "#" ? (
-                      <SidebarMenuButton className="cursor-not-allowed opacity-50">
+                      <div className="flex items-center cursor-not-allowed opacity-50">
                         <item.icon className="h-4 w-4" />
                         {!collapsed && <span className="ml-2">{item.title}</span>}
-                      </SidebarMenuButton>
+                      </div>
                     ) : (
-                      <SidebarMenuButton
-                        asChild
-                        isActive={active}
-                        className={active
-                          ? "relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-primary before:rounded-r bg-white text-primary font-medium"
-                          : "bg-transparent hover:bg-muted/50"}
+                      <NavLink 
+                        to={item.url} 
+                        end
+                        className={({ isActive }) => getNavCls({ isActive })}
                       >
-                        <NavLink to={item.url} end className="flex items-center">
-                          <item.icon className="h-4 w-4" />
-                          {!collapsed && <span className="ml-2">{item.title}</span>}
-                        </NavLink>
-                      </SidebarMenuButton>
+                        <item.icon className="h-4 w-4" />
+                        {!collapsed && <span className="ml-2">{item.title}</span>}
+                      </NavLink>
                     )}
-                  </SidebarMenuItem>
-                )
-              })}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

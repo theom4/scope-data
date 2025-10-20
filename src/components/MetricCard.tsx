@@ -79,8 +79,8 @@ export function MetricCard({
           )}
         </div>
         {Icon && (
-          <div>
-            <Icon className="h-6 w-6 text-primary" />
+          <div className="rounded-full bg-primary/10 p-3 border border-primary/20">
+            <Icon className="h-5 w-5 text-primary" />
           </div>
         )}
       </div>
